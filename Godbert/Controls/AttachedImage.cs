@@ -120,12 +120,22 @@ namespace Godbert.Controls {
         }
 
         private static ImageSource CreateSource(SaintCoinach.Imaging.ImageFile file) {
-            var argb = SaintCoinach.Imaging.ImageConverter.GetA8R8G8B8(file);
-            return BitmapSource.Create(
-                                       file.Width, file.Height,
-                96, 96,
-                PixelFormats.Bgra32, null,
-                argb, file.Width * 4);
+            try {
+                var argb = SaintCoinach.Imaging.ImageConverter.GetA8R8G8B8(file);
+                return BitmapSource.Create(
+                    file.Width, file.Height,
+                    96, 96,
+                    PixelFormats.Bgra32, null,
+                    argb, file.Width * 4);
+            }
+            catch (Exception ex) {
+                var fallbackPixel = new byte[] { 0, 0, 0, 0 };
+                return BitmapSource.Create(
+                    1, 1,
+                    96, 96,
+                    PixelFormats.Bgra32, null,
+                    fallbackPixel, 4);
+            }
         }
     }
 }
